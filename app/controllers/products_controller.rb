@@ -4,10 +4,23 @@ class ProductsController < ApplicationController
 
   # GET /products or /products.json
   def index
-    @pagy, @products = pagy(Product.order(created_at: :desc), limit: 20)
+    offset = params.fetch(:offset, 0).to_i
+    limit  = params.fetch(:limit, 20).to_i
     respond_to do |format|
-      format.html
-      format.turbo_stream
+      format.html do
+        @pagy, @products = pagy(Product.order(created_at: :desc), limit: 20)
+      end
+
+      format.turbo_stream do
+        @pagy, @products = pagy(Product.order(created_at: :desc), limit: 20)
+      end
+
+      format.json do
+        @products = Product
+          .order(created_at: :desc)
+          .offset(offset)
+          .limit(limit)
+      end
     end
   end
 
