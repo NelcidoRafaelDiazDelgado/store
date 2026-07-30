@@ -1,18 +1,9 @@
+```groovy
 pipeline {
     agent any
 
     environment {
-        RAILS_ENV = 'test'
-
-        DB_HOST     = 'postgres'
-        DB_PORT     = '5432'
-        DB_USERNAME = 'postgres'
-        DB_PASSWORD = 'postgres'
-        DB_NAME     = 'rails_app_test'
-
-        SECRET_KEY_BASE = 'test-secret-key'
-
-        BUNDLE_PATH = "${WORKSPACE}/vendor/bundle"
+        PATH = "/Users/diazdelgado/.local/bin:$PATH"
     }
 
     stages {
@@ -20,20 +11,30 @@ pipeline {
         stage('Install mise') {
             steps {
                 sh '''
-                curl https://mise.run | sh
-                ~/.local/bin/mise --version
-                echo "eval \"\$(/Users/diazdelgado/.local/bin/mise activate zsh)\"" >> "/Users/diazdelgado/.zshrc"
+                    if [ ! -x "$HOME/.local/bin/mise" ]; then
+                        curl https://mise.run | sh
+                    fi
+
+                    "$HOME/.local/bin/mise" --version
                 '''
             }
         }
+
         stage('Verify project') {
             steps {
                 sh '''
+                    set -e
+
+                    echo "mise:"
+                    which mise
+                    mise --version
+
+                    echo "Ruby:"
                     mise use ruby@3.4.9
-                    pwd
-                    ruby --version
-                    test -f Gemfile
-                    test -f Gemfile.lock
+                    mise exec -- ruby --version
+
+                    echo "Bundler:"
+                    mise exec -- bundle --version
                 '''
             }
         }
@@ -41,10 +42,10 @@ pipeline {
         stage('Install Bundler') {
             steps {
                 sh '''
-                    ruby --version
-                    gem install bundler -v 2.6.9 --user-install
-                    export PATH="$HOME/.local/share/gem/ruby/3.3.0/bin:$PATH"
-                    bundler --version
+                    set -e
+
+                    mise exec -- gem install bundler -v 2.6.9
+                    mise exec -- bundle --version
                 '''
             }
         }
@@ -52,10 +53,10 @@ pipeline {
         stage('Install dependencies') {
             steps {
                 sh '''
-                    export PATH="$HOME/.local/share/gem/ruby/3.3.0/bin:$PATH"
+                    set -e
 
-                    bundle config set --local path "$WORKSPACE/vendor/bundle"
-                    bundle install
+                    mise exec -- bundle config set --local path vendor/bundle
+                    mise exec -- bundle install
                 '''
             }
         }
@@ -63,9 +64,9 @@ pipeline {
         stage('Run tests') {
             steps {
                 sh '''
-                    export PATH="$HOME/.local/share/gem/ruby/3.3.0/bin:$PATH"
+                    set -e
 
-                    bundle exec rails test
+                    mise exec -- bundle exec rails test
                 '''
             }
         }
@@ -77,7 +78,7 @@ pipeline {
         }
 
         success {
-            echo '✅ Tests exitosos'
+            echo '✅ Tests pasaron'
         }
 
         failure {
@@ -85,3 +86,4 @@ pipeline {
         }
     }
 }
+```
