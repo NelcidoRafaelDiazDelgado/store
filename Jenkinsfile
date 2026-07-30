@@ -20,9 +20,9 @@ pipeline {
         stage('Verify project') {
             steps {
                 sh '''
+                    mise use ruby@3.4.9
                     pwd
                     ruby --version
-                    bundle --version
                     test -f Gemfile
                     test -f Gemfile.lock
                 '''
