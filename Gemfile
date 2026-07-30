@@ -83,7 +83,7 @@ group :development, :test do
 end
 
 gem "faker"
-gem "pagy", "~> 9.1"
+gem "pagy", "~> 43.6"
 gem "paper_trail"
 gem "simplecov", require: false, group: :test
 
