@@ -17,10 +17,18 @@ pipeline {
 
     stages {
 
+        stage('Install mise') {
+            steps {
+                sh '''
+                curl https://mise.run | sh
+                ~/.local/bin/mise --version
+                '''
+            }
+        }
         stage('Verify project') {
             steps {
                 sh '''
-                    mise use ruby@3.4.9
+                    ~/.local/bin/mise use ruby@3.4.9
                     pwd
                     ruby --version
                     test -f Gemfile
@@ -32,6 +40,7 @@ pipeline {
         stage('Install Bundler') {
             steps {
                 sh '''
+                    ruby --version
                     gem install bundler -v 2.6.9 --user-install
                     export PATH="$HOME/.local/share/gem/ruby/3.3.0/bin:$PATH"
                     bundler --version
