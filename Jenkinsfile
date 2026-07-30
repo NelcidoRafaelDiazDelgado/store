@@ -11,6 +11,8 @@ pipeline {
         DB_NAME     = 'rails_app_test'
 
         SECRET_KEY_BASE = 'test-secret-key'
+
+        BUNDLE_PATH = "${WORKSPACE}/vendor/bundle"
     }
 
     stages {
@@ -19,23 +21,42 @@ pipeline {
             steps {
                 sh '''
                     pwd
-                    ls -la
                     ruby --version
                     bundle --version
                     test -f Gemfile
+                    test -f Gemfile.lock
+                '''
+            }
+        }
+
+        stage('Install Bundler') {
+            steps {
+                sh '''
+                    gem install bundler -v 2.6.9 --user-install
+                    export PATH="$HOME/.local/share/gem/ruby/3.3.0/bin:$PATH"
+                    bundler --version
                 '''
             }
         }
 
         stage('Install dependencies') {
             steps {
-                sh 'bundle install'
+                sh '''
+                    export PATH="$HOME/.local/share/gem/ruby/3.3.0/bin:$PATH"
+
+                    bundle config set --local path "$WORKSPACE/vendor/bundle"
+                    bundle install
+                '''
             }
         }
 
         stage('Run tests') {
             steps {
-                sh 'bundle exec rails test'
+                sh '''
+                    export PATH="$HOME/.local/share/gem/ruby/3.3.0/bin:$PATH"
+
+                    bundle exec rails test
+                '''
             }
         }
     }
