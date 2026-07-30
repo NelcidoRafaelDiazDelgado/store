@@ -1,6 +1,7 @@
 class ProductsController < ApplicationController
   before_action :set_product, only: %i[ show edit update destroy ]
   include Pagy::Backend
+  layout "dashboard"
 
   # GET /products or /products.json
   def index
