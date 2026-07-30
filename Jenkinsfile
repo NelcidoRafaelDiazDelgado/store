@@ -2,49 +2,70 @@ pipeline {
     agent any
 
     environment {
-        RAILS_ENV = "test"
-        DATABASE_URL = "postgres://postgres:postgres@postgres:5432/postgres"
+        PATH = "/Users/diazdelgado/.local/bin:$PATH"
     }
 
     stages {
 
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
-
-        stage('Start Postgres') {
-            steps {
-                sh 'docker compose up -d postgres'
-            }
-        }
-
-        stage('Wait DB') {
+        stage('Install mise') {
             steps {
                 sh '''
-                echo "Waiting for postgres..."
-                until docker exec $(docker ps -qf name=postgres) pg_isready -U postgres; do
-                  sleep 2
-                done
+                    if [ ! -x "$HOME/.local/bin/mise" ]; then
+                        curl https://mise.run | sh
+                    fi
+
+                    "$HOME/.local/bin/mise" --version
                 '''
             }
         }
 
-        stage('Build Rails container') {
+        stage('Verify project') {
             steps {
-                sh 'docker compose build rails-app'
+                sh '''
+                    set -e
+
+                    echo "mise:"
+                    which mise
+                    mise --version
+
+                    echo "Ruby:"
+                    mise use ruby@3.4.9
+                    mise exec -- ruby --version
+
+                    echo "Bundler:"
+                    mise exec -- bundle --version
+                '''
             }
         }
 
-        stage('DB Setup + Tests') {
+        stage('Install Bundler') {
             steps {
                 sh '''
-                docker compose run --rm rails-app bash -c "
-                  bundle install &&
-                  rails db:create db:migrate &&
-                  rails test
-                "
+                    set -e
+
+                    mise exec -- gem install bundler -v 2.6.9
+                    mise exec -- bundle --version
+                '''
+            }
+        }
+
+        stage('Install dependencies') {
+            steps {
+                sh '''
+                    set -e
+
+                    mise exec -- bundle config set --local path vendor/bundle
+                    mise exec -- bundle install
+                '''
+            }
+        }
+
+        stage('Run tests') {
+            steps {
+                sh '''
+                    set -e
+
+                    mise exec -- bundle exec rails test
                 '''
             }
         }
@@ -52,7 +73,16 @@ pipeline {
 
     post {
         always {
-            sh 'docker compose down -v'
+            echo 'Tests finalizados'
+        }
+
+        success {
+            echo '✅ Tests pasaron'
+        }
+
+        failure {
+            echo '❌ Tests fallaron'
         }
     }
 }
+
