@@ -60,8 +60,14 @@ development:
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
-  <<: *default
-  database: store_test
+  adapter: postgresql
+  encoding: unicode
+  host: <%= ENV.fetch("TEST_DATABASE_HOST", "localhost") %>
+  port: <%= ENV.fetch("TEST_DATABASE_PORT", 5432) %>
+  database: <%= ENV.fetch("TEST_DATABASE_NAME", "myapp_test") %>
+  username: <%= ENV.fetch("TEST_DATABASE_USER", "postgres") %>
+  password: <%= ENV.fetch("TEST_DATABASE_PASSWORD", "postgres") %>
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS", 5) %>
 
 # As with config/credentials.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is

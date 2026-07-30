@@ -85,5 +85,8 @@ end
 gem "faker"
 gem "pagy", "~> 9.1"
 gem "paper_trail"
-gem "playwright-ruby-client"
 gem "simplecov", require: false, group: :test
+
+group :test do
+  gem "testcontainers", "~> 0.2.0"
+end
