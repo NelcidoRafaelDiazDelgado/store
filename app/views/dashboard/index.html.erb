@@ -1,0 +1,105 @@
+ <main class="flex-1 min-w-0">
+
+    <!-- Header -->
+    <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6">
+
+      <div>
+        <h1 class="text-xl font-semibold text-gray-900">
+          Dashboard
+        </h1>
+
+        <p class="text-sm text-gray-500">
+          Resumen general de tu aplicación
+        </p>
+      </div>
+
+      <button class="w-10 h-10 rounded-lg border border-gray-200
+                     flex items-center justify-center
+                     hover:bg-gray-50">
+        <svg class="w-5 h-5 text-gray-600"
+             fill="none"
+             stroke="currentColor"
+             viewBox="0 0 24 24">
+          <path stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+        </svg>
+      </button>
+
+    </header>
+
+
+    <!-- Content -->
+    <div class="p-6">
+
+      <!-- Table -->
+      <div class="mt-8 bg-white border border-gray-200 rounded-xl overflow-hidden">
+
+        <!-- Table header -->
+        <div class="px-6 py-5 border-b border-gray-200
+                    flex items-center justify-between">
+
+          <div>
+            <h2 class="text-base font-semibold text-gray-900">
+              Actividad reciente
+            </h2>
+
+            <p class="mt-1 text-sm text-gray-500">
+              Últimas operaciones realizadas
+            </p>
+          </div>
+
+        </div>
+
+
+        <!-- Responsive table -->
+       <div class="overflow-x-auto bg-white border border-gray-100 rounded-xl">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+            Product
+          </th>
+
+          <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+            Price
+          </th>
+
+          <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+            SKU
+          </th>
+
+          <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+            Stock
+          </th>
+
+          <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+            Status
+          </th>
+
+          <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">
+            Actions
+          </th>
+        </tr>
+      </thead>
+
+      <tbody id="products" class="bg-white divide-y divide-gray-100">
+        <%= render @products %>
+      </tbody>
+    </table>
+
+    <div id="pagination">
+      <%= render "products/pagination", pagy: @pagy %>
+    </div>
+  </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+ 
