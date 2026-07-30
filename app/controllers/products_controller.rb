@@ -4,10 +4,39 @@ class ProductsController < ApplicationController
 
   # GET /products or /products.json
   def index
-    @pagy, @products = pagy(Product.order(created_at: :desc), limit: 20)
+    offset = params.fetch(:offset, 0).to_i
+    limit  = params.fetch(:limit, 20).to_i
+
+    allowed_sort_columns = %w[created_at price name]
+    sort_column = params.fetch(:sort, "created_at")
+    sort_column = "created_at" unless allowed_sort_columns.include?(sort_column)
+
+    sort_direction = params.fetch(:direction, "desc")
+    sort_direction = "desc" unless %w[asc desc].include?(sort_direction)
+
+    products = Product.order(sort_column => sort_direction)
+
+    if params[:search].present?
+      products = products.where(
+        "name ILIKE :search OR description ILIKE :search",
+        search: "%#{params[:search]}%"
+      )
+    end
+
     respond_to do |format|
-      format.html
-      format.turbo_stream
+      format.html do
+        @pagy, @products = pagy(products, limit: limit)
+      end
+
+      format.turbo_stream do
+        @pagy, @products = pagy(products, limit: limit)
+      end
+
+      format.json do
+        @products = products
+          .offset(offset)
+          .limit(limit)
+      end
     end
   end
 

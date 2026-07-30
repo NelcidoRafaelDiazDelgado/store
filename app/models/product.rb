@@ -8,6 +8,11 @@ class Product < ApplicationRecord
     out_of_stock: 3
   }
 
+  before_commit :send_alert
+
+  def send_alert
+    Rails.logger.info("Executing this #{self.amount}")
+  end
 
   validates :amount, numericality: { greater_than_or_equal_to: 0 }
   validates :price, numericality: { greater_than_or_equal_to: 1 }

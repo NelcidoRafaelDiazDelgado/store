@@ -7,61 +7,305 @@ paths:
   "/products":
     get:
       summary: list products
+      tags:
+      - Products
+      parameters:
+      - name: offset
+        in: query
+        required: false
+        default: 0
+        description: Number of products to skip
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        required: false
+        default: 20
+        description: Maximum number of products to return
+        schema:
+          type: integer
+      - name: search
+        in: query
+        required: false
+        description: Search by product name or description
+        schema:
+          type: string
+      - name: sort
+        in: query
+        required: false
+        enum:
+        - created_at
+        - price
+        - name
+        default: created_at
+        description: "Column used to sort the products:\n * `created_at` \n * `price`
+          \n * `name` \n "
+        schema:
+          type: string
+      - name: direction
+        in: query
+        required: false
+        enum:
+        - asc
+        - desc
+        default: desc
+        description: Sort direction
+        schema:
+          type: string
       responses:
         '200':
           description: successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+                    description:
+                      type: string
+                      nullable: true
+                    amount:
+                      type: number
+                    min:
+                      type: number
+                    price:
+                      type: number
+                    status:
+                      type: string
+                    sku:
+                      type: string
+                    created_at:
+                      type: string
+                      format: date-time
+                    updated_at:
+                      type: string
+                      format: date-time
     post:
       summary: create product
+      tags:
+      - Products
+      parameters: []
       responses:
-        '200':
-          description: successful
+        '201':
+          description: product created
+        '422':
+          description: invalid product
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - name
+              - description
+              - amount
+              - min
+              - price
+              - status
+              - sku
+              properties:
+                name:
+                  type: string
+                  example: Laptop
+                description:
+                  type: string
+                  example: Gaming laptop
+                amount:
+                  type: number
+                  example: 10
+                min:
+                  type: number
+                  example: 2
+                price:
+                  type: number
+                  example: 1299.99
+                status:
+                  type: string
+                  example: active
+                sku:
+                  type: string
+                  example: LAP-001
+        required: true
   "/products/new":
     get:
       summary: new product
+      tags:
+      - Products
       responses:
         '200':
           description: successful
+          content:
+            application/json:
+              schema:
+                type: object
   "/products/{id}/edit":
     parameters:
     - name: id
       in: path
-      description: id
+      format: uuid
       required: true
+      description: Product ID
       schema:
         type: string
     get:
       summary: edit product
+      tags:
+      - Products
       responses:
         '200':
           description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  description:
+                    type: string
+                  amount:
+                    type: number
+                  min:
+                    type: number
+                  price:
+                    type: number
+                  status:
+                    type: string
+                  sku:
+                    type: string
+        '404':
+          description: product not found
   "/products/{id}":
     parameters:
     - name: id
       in: path
-      description: id
+      format: uuid
       required: true
+      description: Product ID
       schema:
         type: string
     get:
       summary: show product
+      tags:
+      - Products
       responses:
         '200':
           description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  description:
+                    type: string
+                  amount:
+                    type: number
+                  min:
+                    type: number
+                  price:
+                    type: number
+                  status:
+                    type: string
+                  sku:
+                    type: string
+                  created_at:
+                    type: string
+                    format: date-time
+                  updated_at:
+                    type: string
+                    format: date-time
+        '404':
+          description: product not found
     patch:
       summary: update product
+      tags:
+      - Products
+      parameters: []
       responses:
         '200':
-          description: successful
+          description: product updated
+        '404':
+          description: product not found
+        '422':
+          description: invalid product
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                amount:
+                  type: number
+                min:
+                  type: number
+                price:
+                  type: number
+                status:
+                  type: string
+                sku:
+                  type: string
+        required: true
     put:
       summary: update product
+      tags:
+      - Products
+      parameters: []
       responses:
         '200':
-          description: successful
+          description: product updated
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - name
+              - description
+              - amount
+              - min
+              - price
+              - status
+              - sku
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                amount:
+                  type: number
+                min:
+                  type: number
+                price:
+                  type: number
+                status:
+                  type: string
+                sku:
+                  type: string
+        required: true
     delete:
       summary: delete product
+      tags:
+      - Products
       responses:
-        '200':
-          description: successful
+        '204':
+          description: product deleted
+        '404':
+          description: product not found
 servers:
 - url: https://{defaultHost}
   variables:
