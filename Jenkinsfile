@@ -22,13 +22,14 @@ pipeline {
                 sh '''
                 curl https://mise.run | sh
                 ~/.local/bin/mise --version
+                echo "eval \"\$(/Users/diazdelgado/.local/bin/mise activate zsh)\"" >> "/Users/diazdelgado/.zshrc"
                 '''
             }
         }
         stage('Verify project') {
             steps {
                 sh '''
-                    ~/.local/bin/mise use ruby@3.4.9
+                    mise use ruby@3.4.9
                     pwd
                     ruby --version
                     test -f Gemfile
