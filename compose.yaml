@@ -57,6 +57,7 @@ services:
             - "9090:9090"
         volumes:
             - ./config:/etc/prometheus
+            - ./prometheus/rules:/etc/prometheus/rules
         command:
             - --config.file=/etc/prometheus/prometheus.yml
             - --web.enable-remote-write-receiver
@@ -103,7 +104,16 @@ services:
             - loki
             - prometheus
             - tempo
- 
+
+    alertmanager:
+        image: prom/alertmanager:latest
+        volumes:
+           - ./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+        ports:
+            - "9093:9093"
+        depends_on:
+            - grafana
+
     jenkins:
         privileged: true
         image: jenkins/jenkins:lts
