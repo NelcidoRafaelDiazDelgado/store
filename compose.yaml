@@ -1,31 +1,29 @@
 services:
     rails-app:
-        ports:
-          - "80:3000"
         build:
             context: .
             dockerfile: Dockerfile
+
+        command: bin/rails server -b 0.0.0.0 -p 3000
+
+        ports:
+            - "3000:3000"
         environment:
-            DB_HOST: postgres 
-            SECRET_KEY_BASE: ${SECRET}
+            RAILS_ENV: development
+            DB_HOST: postgres
             DB_USERNAME: postgres
             DB_PASSWORD: postgres
-        volumes:
-        - ../../store:/workspaces/store:cached
+            SECRET_KEY_BASE: ${SECRET}
 
-       
+        volumes:
+            - .:/rails
+
         networks:
             - rails_bridge
 
-
-        # Uncomment the next line to use a non-root user for all processes.
-        # user: vscode
-
-        # Use "forwardPorts" in **devcontainer.json** to forward an app port locally.
-        # (Adding the "ports" property to this file will not forward from a Codespace.)
         depends_on:
-        - selenium
-        - postgres
+            - postgres
+            - selenium
 
     selenium:
         image: selenium/standalone-chromium
@@ -47,12 +45,16 @@ services:
 
     loki:
         image: grafana/loki:2.9.8
+        networks:
+            - rails_bridge
         ports:
             - "3100:3100"
         command: -config.file=/etc/loki/local-config.yaml
 
     prometheus:
         image: prom/prometheus:v2.53.4
+        networks:
+            - rails_bridge
         ports:
             - "9090:9090"
         volumes:
@@ -64,6 +66,8 @@ services:
 
     tempo:
         image: grafana/tempo:2.6.1
+        networks:
+            - rails_bridge
         ports:
             - "3200:3200"
         volumes:
@@ -73,6 +77,8 @@ services:
 
     alloy:
         image: grafana/alloy:v1.7.1
+        networks:
+            - rails_bridge
         ports:
             - "12345:12345"
             - "4317:4317"
@@ -93,6 +99,8 @@ services:
 
     grafana:
         image: grafana/grafana:13.0.1
+        networks:
+            - rails_bridge
         ports:
             - "3001:3000"
         environment:
@@ -107,6 +115,8 @@ services:
 
     alertmanager:
         image: prom/alertmanager:latest
+        networks:
+            - rails_bridge
         volumes:
            - ./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
         ports:
@@ -126,6 +136,15 @@ services:
         volumes:
             - jenkins_home:/var/jenkins_home
             - /var/run/docker.sock:/var/run/docker.sock
+    k6:
+        image: grafana/k6:latest
+        container_name: k6
+        volumes:
+            - ./k6:/k6:ro
+        working_dir: /k6
+        command: run /k6/products.js
+        networks:
+            - rails_bridge
 
 volumes:
   postgres-data:
@@ -133,5 +152,4 @@ volumes:
 
 networks:
     rails_bridge:
-        external: true
-        name: store_default
+        driver: bridge

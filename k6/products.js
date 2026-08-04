@@ -2,7 +2,8 @@ import http from "k6/http";
 import { check, sleep } from "k6";
 import { Trend, Rate, Counter } from "k6/metrics";
 
-const BASE_URL = __ENV.BASE_URL || "http://localhost:3000";
+const BASE_URL = __ENV.BASE_URL || "http://rails-app:3000";
+console.log(__ENV.BASE_URL)
 
 const indexDuration = new Trend("products_index_duration", true);
 const searchDuration = new Trend("products_search_duration", true);

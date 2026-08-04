@@ -74,6 +74,8 @@
           <p class="text-sm font-semibold text-gray-900 truncate">
             <%= @email %>
           </p>
+          <%= button_to "Log Out", session_path, method: :delete %>
+
         </div>
       </div>
     </div>

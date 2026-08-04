@@ -1,76 +1,65 @@
- <main class="flex-1 min-w-0">
+<main class="flex-1 min-w-0">
+  <div class="p-6">
 
+    <!-- Recent activity -->
+    <section class="mt-8 bg-white border border-gray-200 rounded-xl overflow-hidden">
 
-    <!-- Content -->
-    <div class="p-6">
+      <!-- Section header -->
+      <div class="px-6 py-5 border-b border-gray-200 flex items-center justify-between">
+        <div>
+          <h2 class="text-base font-semibold text-gray-900">
+            Actividad reciente
+          </h2>
 
-      <!-- Table -->
-      <div class="mt-8 bg-white border border-gray-200 rounded-xl overflow-hidden">
-
-        <!-- Table header -->
-        <div class="px-6 py-5 border-b border-gray-200
-                    flex items-center justify-between">
-
-          <div>
-            <h2 class="text-base font-semibold text-gray-900">
-              Actividad reciente
-            </h2>
-
-            <p class="mt-1 text-sm text-gray-500">
-              Últimas operaciones realizadas
-            </p>
-          </div>
-
+          <p class="mt-1 text-sm text-gray-500">
+            Últimas operaciones realizadas
+          </p>
         </div>
-
-
-        <!-- Responsive table -->
-       <div class="overflow-x-auto bg-white border border-gray-100 rounded-xl">
-    <table class="min-w-full divide-y divide-gray-200">
-      <thead class="bg-gray-50">
-        <tr>
-          <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-            Product
-          </th>
-
-          <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-            Price
-          </th>
-
-          <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-            SKU
-          </th>
-
-          <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-            Stock
-          </th>
-
-          <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-            Status
-          </th>
-
-          <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">
-            Actions
-          </th>
-        </tr>
-      </thead>
-
-      <tbody id="products" class="bg-white divide-y divide-gray-100">
-        <%= render @products %>
-      </tbody>
-    </table>
-
-    <div id="pagination">
-      <%= render "products/pagination", pagy: @pagy %>
-    </div>
-  </div>
-
-        </div>
-
       </div>
 
-    </div>
+      <!-- Responsive table -->
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                Product
+              </th>
 
-  </main>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                Price
+              </th>
 
- 
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                SKU
+              </th>
+
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                Stock
+              </th>
+
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                Status
+              </th>
+
+              <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">
+                Actions
+              </th>
+            </tr>
+          </thead>
+
+          <tbody id="products" class="bg-white divide-y divide-gray-100">
+            <%= render @products %>
+          </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <div id="pagination">
+          <%= render "products/pagination", pagy: @pagy %>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+</main>
