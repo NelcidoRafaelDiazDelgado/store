@@ -25,65 +25,6 @@
 
   <body>
     <div class="min-h-screen bg-gray-50 flex">
-
-  <!-- Sidebar -->
-  <aside class="hidden lg:flex lg:w-64 flex-col bg-white border-r border-gray-200">
-
-    <!-- Logo -->
-    <div class="h-16 flex items-center px-6 border-b border-gray-200">
-      <div class="flex items-center gap-3">
-        <div class="w-9 h-9 rounded-lg bg-gray-900 flex items-center justify-center">
-          <span class="text-white font-bold">R</span>
-        </div>
-
-        <span class="text-lg font-semibold text-gray-900">
-          Rails Admin
-        </span>
-      </div>
-    </div>
-
-    <!-- Navigation -->
-    <nav class="flex-1 px-4 py-6 space-y-1">
-
-      <p class="px-3 mb-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-        Principal
-      </p>
-
-      <a href="/"
-         class="flex items-center gap-3 px-3 py-2.5 rounded-lg
-                text-gray-600 font-medium">
-        Dashboard
-      </a>
-
-      <a href="<%= products_path %>"
-         class="flex items-center gap-3 px-3 py-2.5 rounded-lg
-                text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition">
-        Productos
-      </a>
-
-    </nav>
-
-    <!-- User -->
-    <div class="border-t border-gray-200 p-4">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
-          <span class="font-semibold text-gray-600">JD</span>
-        </div>
-
-        <div class="flex-1 min-w-0">
-          <p class="text-sm font-semibold text-gray-900 truncate">
-            John Doe
-          </p>
-
-          <p class="text-xs text-gray-500 truncate">
-            Administrador
-          </p>
-        </div>
-      </div>
-    </div>
-
-  </aside>
-
     
       <%= yield %>
     
